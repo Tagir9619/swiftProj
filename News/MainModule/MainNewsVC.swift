@@ -8,12 +8,19 @@
 import UIKit
 import Moya
 
-class MainNewsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+protocol MainNewsView: AnyObject {
+    func set(articles: [News])
+}
+
+
+class MainNewsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MainNewsView {
+    
+    
+    var presenter: MainNewsPresenter?
     private var tableView = UITableView()
-    var newsService = NewsService()
     var articles: [News] = []
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
@@ -22,14 +29,13 @@ class MainNewsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         tableView.frame = view.bounds
-        
-        newsService.getNews(completion: { articles in
-            self.articles = articles
-            self.tableView.reloadData()
-        })
+        presenter?.loadArticles()
     }
     
-    
+    func set(articles: [News]) {
+        self.articles = articles
+        tableView.reloadData()
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         articles.count
@@ -50,8 +56,9 @@ class MainNewsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let articleViewController = ArticleViewController()
-        articleViewController.article = articles[indexPath.row]
+        let selectedArticle = articles[indexPath.row]
+        let articleViewController = ArticleAssembly.createModule(article: selectedArticle) as! ArticleViewController
+        
         navigationController?.pushViewController(articleViewController, animated: true)
     }
 

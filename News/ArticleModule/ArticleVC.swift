@@ -3,15 +3,20 @@
 //  News
 //
 //  Created by Тагир Булыков on 15.02.2024.
-//
+//  Отобразить данные и
 
 import UIKit
 import CoreData
 
-class ArticleViewController: UIViewController {
+protocol ArticleView: AnyObject {
+    var article: News? { get set }
+    func set(article: News)
+}
+
+
+class ArticleViewController: UIViewController, ArticleView {
+    
     var article: News?
-    var favoritesService = FavoritesService()
-    var coreDataService = CoreDataService()
 
     
     // MARK: - Views
@@ -23,19 +28,24 @@ class ArticleViewController: UIViewController {
     private let contentLabel = UILabel()
     private let authorLabel = UILabel()
     
-    
+    var presenter: ArticlePresenter?
     
     // MARK: - Lifecircle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupLayout()
+        
+        presenter?.didWiewLoad()
+        
+        
+        
         // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        updateFavoriteButtonState()
     }
 }
 
@@ -52,8 +62,7 @@ private extension ArticleViewController {
         configureDescriptionLabel()
         configureAuthorLabel()
         configureContentLabel()
-        //configureBarButton()
-        updateFavoriteButtonState()
+        
         addContentToScrollView()
     }
     func configureScrollView() {
@@ -92,7 +101,6 @@ private extension ArticleViewController {
     
     func configureLabel() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = article?.title
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         titleLabel.sizeToFit()
@@ -101,7 +109,6 @@ private extension ArticleViewController {
     
     func configureDescriptionLabel() {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.text = article?.description
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = .merriweatherFont(size: 14, style: .regular)
     }
@@ -109,17 +116,10 @@ private extension ArticleViewController {
     func configureAuthorLabel() {
         authorLabel.translatesAutoresizingMaskIntoConstraints = false
         authorLabel.font = .merriweatherFont(size: 18, style: .regular)
-        
-        if article?.author != nil {
-            authorLabel.text = article?.author
-        } else {
-            authorLabel.text = "Unknown author"
-        }
     }
     
     func configureContentLabel() {
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentLabel.text = article?.content
         contentLabel.numberOfLines = 0
         contentLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         contentLabel.sizeToFit()
@@ -127,10 +127,13 @@ private extension ArticleViewController {
     }
     
     func updateFavoriteButtonState() {
-        let isSaved = favoritesService.isArticleSaved(article: article!)
         var buttonImage: UIImage
-        if isSaved {
-            buttonImage = UIImage(systemName: "star.fill")!
+        if let isSaved = presenter?.isArticleSaved(article: article!) {
+            if isSaved {
+                buttonImage = UIImage(systemName: "star.fill")!
+            } else {
+                buttonImage = UIImage(systemName: "star")!
+            }
         } else {
             buttonImage = UIImage(systemName: "star")!
         }
@@ -138,15 +141,17 @@ private extension ArticleViewController {
     }
     
     @objc func didTapButton() {
-        let isSaved = favoritesService.isArticleSaved(article: article!)
-        
-        if isSaved {
-            favoritesService.deleteData(article: article!)
-        } else {
-            favoritesService.saveData(article: article!)
+        if let isSaved = presenter?.isArticleSaved(article: article!) {
+            if isSaved {
+                presenter?.deleteData(article: article!)
+            } else {
+                presenter?.saveData(article: article!)
+            }
+            updateFavoriteButtonState()
         }
-        updateFavoriteButtonState()
     }
+    
+
     
     func addContentToScrollView() {
         contentView.addSubview(exampleURL)
@@ -180,6 +185,41 @@ private extension ArticleViewController {
             contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
-
 }
 
+
+extension ArticleViewController {
+    func set(article: News) {
+        self.article = article
+        setupData()
+    }
+}
+
+
+extension ArticleViewController {
+    func setupData() {
+        setupLabel()
+        setupDescriptionLabel()
+        setupAuthorLabel()
+        setupContentLabel()
+    }
+    
+    func setupLabel() {
+        titleLabel.text = article?.title
+    }
+    
+    func setupDescriptionLabel() {
+        descriptionLabel.text = article?.description
+    }
+    func setupAuthorLabel() {
+        if article?.author != nil {
+            authorLabel.text = article?.author
+        } else {
+            authorLabel.text = "Unknown author"
+        }
+    }
+    
+    func setupContentLabel() {
+        contentLabel.text = article?.content
+    }
+}

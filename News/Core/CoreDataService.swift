@@ -7,7 +7,14 @@
 
 import CoreData
 
-class CoreDataService {
+protocol CoreDataService {
+    var context: NSManagedObjectContext { get }
+    func saveContext()
+    func fetch(nameDB: String, predicate: NSPredicate?) -> [NSManagedObject]
+    func deleteContext(article: NSManagedObject)
+}
+
+class CoreDataServiceImpl: CoreDataService {
     static var persistentContainer: NSPersistentContainer = {
             let container = NSPersistentContainer(name: "CoreData")
             container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -19,7 +26,7 @@ class CoreDataService {
         }()
     
     var context: NSManagedObjectContext {
-        CoreDataService.persistentContainer.viewContext
+        CoreDataServiceImpl.persistentContainer.viewContext
     }
     
     func saveContext() {

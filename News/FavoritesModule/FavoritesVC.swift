@@ -9,15 +9,19 @@ import Foundation
 import UIKit
 import CoreData
 
-class FavoritesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate {
-    
+protocol FavoritesView: AnyObject {
+    func set(articles: [News])
+}
+
+
+
+class FavoritesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate, FavoritesView {
     
     
     // MARK: - Views
     private let tableView = UITableView()
     var articles: [News] = []
-    var favoritesService = FavoritesService()
-    
+    var presenter: FavoritesPresenter?
     
     //MARK: - Lifecircle
     override func viewDidLoad() {
@@ -27,7 +31,7 @@ class FavoritesViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        fetchArticles()
+        presenter?.loadArticles()
         tableView.reloadData()
     }
 }
@@ -59,24 +63,25 @@ extension FavoritesViewController {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let articleViewController = ArticleViewController()
-        articleViewController.article = articles[indexPath.row]
+        let selectedArticle = articles[indexPath.row]
+        let articleViewController = ArticleAssembly.createModule(article: selectedArticle) as! ArticleViewController
+
         navigationController?.pushViewController(articleViewController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let trash = UIContextualAction(style: .destructive,
                                        title: "Trash") { [weak self] (action, view, completionHandler) in
-            guard let self = self else {return}
+            guard let self = self else { return }
             let article = articles[indexPath.row]
-            self.favoritesService.deleteData(article: self.articles[indexPath.row])
+            self.presenter?.deleteArticles(article: article)
             self.articles.removeAll() { deleteArticle in
                 deleteArticle.urlToImage == article.urlToImage
             }
             tableView.reloadData()
             completionHandler(true)
         }
-        trash.backgroundColor = .systemRed
+        //trash.backgroundColor = .systemRed
         
         let configuration = UISwipeActionsConfiguration(actions: [trash])
         
@@ -84,19 +89,7 @@ extension FavoritesViewController {
     }
 
     //MARK: - Fetch Articles
-    func fetchArticles() {
-        let fetchedArticles = favoritesService.fetchedSaveArticles()
-        articles = fetchedArticles
+    func set(articles: [News]) {
+        self.articles = articles
     }
 }
-
-
-
-
-
-/// 1. Сделать CoreDataService, которая содержит все метод работы с CoreData из AppDelegate
-/// 2. Сделать FavoritesService, которая содержит все запросы в базу, сохранения и т.д.
-/// 3. Сервис и контроллеры должен работать через News
-/// 4. SOLID - изучить
-///
-///  1. Сделать заполнение звезды при сохранении и удалении

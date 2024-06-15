@@ -9,16 +9,25 @@ import Foundation
 import UIKit
 import CoreData
 
+protocol FavoritesService {
+    func fetchedSaveArticles() -> [News]
+    func saveData(article: News)
+    func deleteData(article: News)
+    func compoundPredicate(article: News) -> NSCompoundPredicate?
+    func isArticleSaved(article: News) -> Bool
+}
 
 
-
-
-class FavoritesService {
-    let coreDataService = CoreDataService()
+class FavoritesServiceImpl: FavoritesService {
+    
+    let coreDataService: CoreDataService
+    init(coreDataService: CoreDataService) {
+        self.coreDataService = coreDataService
+    }
 
     func fetchedSaveArticles() -> [News] {
         var news = [News]()
-        let fetchedArticle = coreDataService.fetch(nameDB: "NewsDB")
+        let fetchedArticle = coreDataService.fetch(nameDB: "NewsDB", predicate: nil)
         
         for article in fetchedArticle {
             if let examplare = article as? NewsDB {
