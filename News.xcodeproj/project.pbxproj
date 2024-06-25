@@ -51,6 +51,8 @@
 		AA96F2112B9CFBEC002FBF9E /* Merriweather-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA96F2102B9CFBEC002FBF9E /* Merriweather-BoldItalic.ttf */; };
 		AA96F2132B9D9BF4002FBF9E /* FavoritesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F2122B9D9BF4002FBF9E /* FavoritesVC.swift */; };
 		AABE348F2B7E47EF00651FD1 /* ArticleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABE348E2B7E47EF00651FD1 /* ArticleVC.swift */; };
+		AACBE7522C28146000DA1978 /* Network in Resources */ = {isa = PBXBuildFile; fileRef = AACBE7512C28146000DA1978 /* Network */; };
+		AACBE7542C28146D00DA1978 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACBE7532C28146D00DA1978 /* ServiceError.swift */; };
 		AACC755D2BB6AAD00021192E /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACC755C2BB6AAD00021192E /* CoreDataService.swift */; };
 		AACC755F2BB6AB020021192E /* FavoritesServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACC755E2BB6AB020021192E /* FavoritesServiceImpl.swift */; };
 		ECCE5F55890B5759B01A6153 /* Pods_News.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE72791C399E1E2E6D7AC244 /* Pods_News.framework */; };
@@ -104,6 +106,8 @@
 		AA96F2102B9CFBEC002FBF9E /* Merriweather-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Merriweather-BoldItalic.ttf"; sourceTree = "<group>"; };
 		AA96F2122B9D9BF4002FBF9E /* FavoritesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesVC.swift; sourceTree = "<group>"; };
 		AABE348E2B7E47EF00651FD1 /* ArticleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleVC.swift; sourceTree = "<group>"; };
+		AACBE7512C28146000DA1978 /* Network */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Network; sourceTree = "<group>"; };
+		AACBE7532C28146D00DA1978 /* ServiceError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		AACC755C2BB6AAD00021192E /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		AACC755E2BB6AB020021192E /* FavoritesServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesServiceImpl.swift; sourceTree = "<group>"; };
 		B2075F8FB3C54992FA39C482 /* Pods-News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.debug.xcconfig"; path = "Target Support Files/Pods-News/Pods-News.debug.xcconfig"; sourceTree = "<group>"; };
@@ -173,7 +177,9 @@
 		AA48ADE22C08C62A009A9289 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				AACBE7532C28146D00DA1978 /* ServiceError.swift */,
 				AACC755C2BB6AAD00021192E /* CoreDataService.swift */,
+				AACBE7512C28146000DA1978 /* Network */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -370,6 +376,7 @@
 				AA70E3922B722BC900E3ADB6 /* librefranklin-bolditalic.ttf in Resources */,
 				AA70E3672B6FAB8000E3ADB6 /* LaunchScreen.storyboard in Resources */,
 				AA16B0432B8E741F0096039F /* Merriweather-Regular.ttf in Resources */,
+				AACBE7522C28146000DA1978 /* Network in Resources */,
 				AA70E3942B722BC900E3ADB6 /* librefranklin-italic.ttf in Resources */,
 				AA70E38C2B722BC900E3ADB6 /* SIL Open Font License.txt in Resources */,
 				AA70E38A2B722BC900E3ADB6 /* librefranklin-semibolditalic.ttf in Resources */,
@@ -440,6 +447,7 @@
 				AA48ADE62C08CA62009A9289 /* FavoritesAssembly.swift in Sources */,
 				AA70E3A12B7237B100E3ADB6 /* News.swift in Sources */,
 				AA617A482BA7097C00D795F9 /* NewsDB+CoreDataProperties.swift in Sources */,
+				AACBE7542C28146D00DA1978 /* ServiceError.swift in Sources */,
 				AA70E35D2B6FAB7D00E3ADB6 /* SceneDelegate.swift in Sources */,
 				AABE348F2B7E47EF00651FD1 /* ArticleVC.swift in Sources */,
 				AA48ADDE2BFF88C6009A9289 /* MainNewsPresenter.swift in Sources */,

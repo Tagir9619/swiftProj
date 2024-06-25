@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  News
-//
-//  Created by Тагир Булыков on 15.02.2024.
-//  Отобразить данные и
-
 import UIKit
 import CoreData
 
@@ -17,7 +10,6 @@ protocol ArticleView: AnyObject {
 class ArticleViewController: UIViewController, ArticleView {
     
     var article: News?
-
     
     // MARK: - Views
     private let exampleURL = UIImageView()
@@ -202,6 +194,11 @@ extension ArticleViewController {
         setupDescriptionLabel()
         setupAuthorLabel()
         setupContentLabel()
+        setupImageView()
+    }
+    
+    func setupImageView () {
+        exampleURL.kf.setImage(with: URL(string: (article?.urlToImage) ?? ""), placeholder: nil)
     }
     
     func setupLabel() {
